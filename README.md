@@ -88,7 +88,7 @@ python3 kv_secret.py myvault --tenant-id <tenant-id> --credentials <client-id>:<
 | `--name-filter` | all secrets | Only show secrets whose name contains this text. The match ignores case. |
 | `--preview` | off | Show the first 10 characters of each value and replace the rest with `*`. A value longer than 100 characters is cut off at 100 and ends with `...`. |
 
-Each matching secret is printed as `name value`. Disabled secrets are listed as `<disabled>`, and secrets that can't be read print a warning and are skipped.
+The output starts with a header listing the vault name, the name filter, the tenant ID, the client ID, and the client secret with only its first 3 characters visible. After a blank line, each matching secret is printed as `name value`. Disabled secrets are listed as `<disabled>`, and secrets that can't be read print a warning and are skipped.
 
 A secret passed on the command line is visible in your shell history and to other users on the machine through the process list, so prefer a short-lived secret or clear your history afterwards.
 

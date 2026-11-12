@@ -15,6 +15,9 @@ DEFAULT_TENANT_ID = ""
 PREVIEW_LENGTH = 10
 PREVIEW_MAX_LENGTH = 100
 
+# Characters of the client secret shown in the output header.
+CLIENT_SECRET_VISIBLE_LENGTH = 3
+
 
 def parse_credentials(value: str) -> tuple[str, str]:
     """Split 'client_id:secret' into its two parts."""
@@ -31,6 +34,15 @@ def parse_credentials(value: str) -> tuple[str, str]:
     return client_id.strip(), client_secret
 
 
+def mask(value: str, visible_length: int) -> str:
+    """Keep the first characters of a value and replace the rest with '*'."""
+
+    return (
+        value[:visible_length]
+        + "*" * max(len(value) - visible_length, 0)
+    )
+
+
 def format_value(
     value: Optional[str],
     preview: bool,
@@ -43,10 +55,7 @@ def format_value(
     if not preview:
         return value
 
-    masked = (
-        value[:PREVIEW_LENGTH]
-        + "*" * max(len(value) - PREVIEW_LENGTH, 0)
-    )
+    masked = mask(value, PREVIEW_LENGTH)
 
     if len(masked) > PREVIEW_MAX_LENGTH:
         return masked[:PREVIEW_MAX_LENGTH] + "..."
@@ -134,6 +143,16 @@ def main() -> None:
         if args.name_filter
         else None
     )
+
+    print(f"Key Vault:     {args.name}")
+    print(f"Name filter:   {args.name_filter or '(none, all secrets)'}")
+    print(f"Tenant ID:     {args.tenant_id}")
+    print(f"Client ID:     {client_id}")
+    print(
+        "Client secret: "
+        f"{mask(client_secret, CLIENT_SECRET_VISIBLE_LENGTH)}"
+    )
+    print()
 
     shown = 0
 
