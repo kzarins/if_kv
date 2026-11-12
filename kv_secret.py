@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-import os
 import sys
 from typing import Optional
 
@@ -9,6 +8,9 @@ from azure.core.exceptions import HttpResponseError
 from azure.identity import ClientSecretCredential
 from azure.keyvault.secrets import SecretClient
 
+
+# Tenant used when --tenant-id is not given. Fill in your tenant ID here.
+DEFAULT_TENANT_ID = ""
 
 PREVIEW_LENGTH = 10
 PREVIEW_MAX_LENGTH = 100
@@ -79,10 +81,10 @@ def main() -> None:
 
     parser.add_argument(
         "--tenant-id",
-        default=os.environ.get("AZURE_TENANT_ID"),
+        default=DEFAULT_TENANT_ID,
         help=(
             "Microsoft Entra tenant ID of the Service Principal. "
-            "Defaults to the AZURE_TENANT_ID environment variable."
+            "Defaults to DEFAULT_TENANT_ID in this script."
         ),
     )
 
@@ -110,7 +112,7 @@ def main() -> None:
     if not args.tenant_id:
         parser.error(
             "--tenant-id is required "
-            "when AZURE_TENANT_ID is not set"
+            "when DEFAULT_TENANT_ID in the script is empty"
         )
 
     client_id, client_secret = args.credentials

@@ -84,7 +84,7 @@ python3 kv_secret.py myvault --tenant-id <tenant-id> --credentials <client-id>:<
 | --- | --- | --- |
 | `name` | required | The vault name, as in `<name>.vault.azure.net`. |
 | `--credentials` | required | The Service Principal's client ID and client secret, as `client_id:secret`. The secret may itself contain colons. |
-| `--tenant-id` | `AZURE_TENANT_ID` | The Service Principal's tenant ID. Required if the environment variable is not set. |
+| `--tenant-id` | `DEFAULT_TENANT_ID` | The Service Principal's tenant ID. If you leave it out, the script uses the `DEFAULT_TENANT_ID` value set at the top of `kv_secret.py`. Required if that value is empty. |
 | `--name-filter` | all secrets | Only show secrets whose name contains this text. The match ignores case. |
 | `--preview` | off | Show the first 10 characters of each value and replace the rest with `*`. A value longer than 100 characters is cut off at 100 and ends with `...`. |
 
