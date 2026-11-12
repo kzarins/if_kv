@@ -14,7 +14,8 @@ def run_az(
     arguments: list[str],
     *,
     allow_failure: bool = False,
-) -> Optional"""Run Azure CLI and return decoded JSON."""
+) -> Optional[Any]:
+    """Run Azure CLI and return decoded JSON."""
 
     command = ["az", *arguments, "--output", "json"]
 
@@ -205,7 +206,8 @@ def get_key_vaults(
 
 def extract_key_vault_name_from_scope(
     assignment_scope: Optional[str],
-) -> Optional"""
+) -> Optional[str]:
+    """
     Extract the Key Vault name if the assignment scope points
     directly to a Key Vault or one of its child resources.
     """
@@ -235,7 +237,8 @@ def extract_key_vault_name_from_scope(
 def correlate_assignment_with_vault(
     assignment_scope: Optional[str],
     vault_resource_id: Optional[str],
-) -> Optional"""
+) -> Optional[str]:
+    """
     Determine whether an RBAC assignment applies to a Key Vault.
 
     Returns:
@@ -507,7 +510,7 @@ def main() -> None:
             subscription_id
         )
 
-        result_entry = {
+        result_entry: dict[str, Any] = {
             "subscriptionName": subscription_name,
             "subscriptionId": subscription_id,
             "keyVaultEnumerationSucceeded": vaults is not None,

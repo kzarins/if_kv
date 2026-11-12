@@ -16,7 +16,8 @@ KEY_VAULT_PROVIDER_PATH = "/providers/microsoft.keyvault/vaults/"
 def run_az(
     arguments: List[str],
     allow_failure: bool = False,
-) -> Optional"""
+) -> Optional[Any]:
+    """
     Run an Azure CLI command and return decoded JSON.
     """
 
@@ -99,7 +100,8 @@ def normalize_guid(value: Optional[str]) -> str:
     return value.strip().lower()
 
 
-def read_client_ids(file_path: Path) -> List"""
+def read_client_ids(file_path: Path) -> List[str]:
+    """
     Read unique SP client IDs from a file.
 
     Supported format:
@@ -486,7 +488,8 @@ def role_allows_action(
 
 def get_key_vault_capabilities(
     role_definition: Optional[Dict[str, Any]],
-) -> List"""
+) -> List[str]:
+    """
     Determine which Key Vault data-plane capabilities a role provides.
 
     The capability labels represent practical operation categories rather
@@ -538,7 +541,8 @@ def get_key_vault_capabilities(
 def assignment_scope_relationship(
     assignment_scope: Optional[str],
     vault_resource_id: Optional[str],
-) -> Optional"""
+) -> Optional[str]:
+    """
     Determine whether an RBAC assignment applies to a Key Vault.
 
     Returns:
@@ -568,7 +572,8 @@ def assignment_scope_relationship(
 
 def get_legacy_policy_capabilities(
     policy: Dict[str, Any],
-) -> List"""
+) -> List[str]:
+    """
     Convert legacy Key Vault access-policy permissions to readable labels.
     """
 
