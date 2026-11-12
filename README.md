@@ -1,11 +1,12 @@
 # if_kv
 
-Two Python scripts that audit which Azure Service Principals can access which Azure Key Vaults. They use the Azure CLI (`az`) to read your tenant. Neither script changes anything in Azure.
+Python scripts that audit which Azure Service Principals can access which Azure Key Vaults. `all_kvs.py` and `kv_sp.py` use the Azure CLI (`az`) to read your tenant; `kv_secret.py` signs in to one vault as a Service Principal. None of the scripts change anything in Azure.
 
 | Script | Use it to |
 | --- | --- |
 | `all_kvs.py` | Check a list of Service Principals against every Key Vault in every enabled subscription you can see, and write a CSV and a JSON report. |
 | `kv_sp.py` | List one Service Principal's Azure RBAC role assignments in the subscriptions whose names match a filter, and see which Key Vaults each assignment covers. |
+| `kv_secret.py` | Sign in as a Service Principal and print the secrets it can read in one Key Vault. |
 
 ## Requirements
 
@@ -66,6 +67,30 @@ python3 kv_sp.py --client-id 11111111-2222-3333-4444-555555555555 --subscription
 | `--json-file` | none | Also save the full result as JSON at this path. |
 
 For every enabled subscription whose name contains the filter, the script prints each role assignment the Service Principal has there. It also lists the Key Vaults each assignment covers, with the same `direct-vault`, `inherited-parent` and `child-resource-only` labels.
+
+## kv_secret.py: read a vault's secrets as a Service Principal
+
+This script uses the Azure SDK instead of the Azure CLI, so it needs two packages:
+
+```bash
+pip install azure-identity azure-keyvault-secrets
+```
+
+```bash
+python3 kv_secret.py myvault --tenant-id <tenant-id> --credentials <client-id>:<client-secret>
+```
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `name` | required | The vault name, as in `<name>.vault.azure.net`. |
+| `--credentials` | required | The Service Principal's client ID and client secret, as `client_id:secret`. The secret may itself contain colons. |
+| `--tenant-id` | `AZURE_TENANT_ID` | The Service Principal's tenant ID. Required if the environment variable is not set. |
+| `--name-filter` | all secrets | Only show secrets whose name contains this text. The match ignores case. |
+| `--preview` | off | Show only the first 10 characters of each value instead of the full value. |
+
+Each matching secret is printed as `name value`. Disabled secrets are listed as `<disabled>`, and secrets that can't be read print a warning and are skipped.
+
+A secret passed on the command line is visible in your shell history and to other users on the machine through the process list, so prefer a short-lived secret or clear your history afterwards.
 
 ## Limitations
 
