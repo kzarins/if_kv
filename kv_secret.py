@@ -11,6 +11,7 @@ from azure.keyvault.secrets import SecretClient
 
 
 PREVIEW_LENGTH = 10
+PREVIEW_MAX_LENGTH = 100
 
 
 def parse_credentials(value: str) -> tuple[str, str]:
@@ -32,15 +33,23 @@ def format_value(
     value: Optional[str],
     preview: bool,
 ) -> str:
-    """Return the secret value, or its first characters in preview mode."""
+    """Return the secret value, or a masked preview of it."""
 
     if value is None:
         return ""
 
-    if preview:
-        return value[:PREVIEW_LENGTH]
+    if not preview:
+        return value
 
-    return value
+    masked = (
+        value[:PREVIEW_LENGTH]
+        + "*" * max(len(value) - PREVIEW_LENGTH, 0)
+    )
+
+    if len(masked) > PREVIEW_MAX_LENGTH:
+        return masked[:PREVIEW_MAX_LENGTH] + "..."
+
+    return masked
 
 
 def main() -> None:
@@ -89,8 +98,10 @@ def main() -> None:
         "--preview",
         action="store_true",
         help=(
-            f"Show only the first {PREVIEW_LENGTH} characters "
-            "of each secret value instead of the full value."
+            f"Show the first {PREVIEW_LENGTH} characters of each "
+            "secret value and replace the rest with '*'. Values "
+            f"longer than {PREVIEW_MAX_LENGTH} characters are cut "
+            "off and end with '...'."
         ),
     )
 

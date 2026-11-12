@@ -86,7 +86,7 @@ python3 kv_secret.py myvault --tenant-id <tenant-id> --credentials <client-id>:<
 | `--credentials` | required | The Service Principal's client ID and client secret, as `client_id:secret`. The secret may itself contain colons. |
 | `--tenant-id` | `AZURE_TENANT_ID` | The Service Principal's tenant ID. Required if the environment variable is not set. |
 | `--name-filter` | all secrets | Only show secrets whose name contains this text. The match ignores case. |
-| `--preview` | off | Show only the first 10 characters of each value instead of the full value. |
+| `--preview` | off | Show the first 10 characters of each value and replace the rest with `*`. A value longer than 100 characters is cut off at 100 and ends with `...`. |
 
 Each matching secret is printed as `name value`. Disabled secrets are listed as `<disabled>`, and secrets that can't be read print a warning and are skipped.
 
