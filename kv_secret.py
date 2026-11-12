@@ -15,9 +15,6 @@ DEFAULT_TENANT_ID = ""
 PREVIEW_LENGTH = 10
 PREVIEW_MAX_LENGTH = 100
 
-# Characters of the client secret shown in the output header.
-CLIENT_SECRET_VISIBLE_LENGTH = 3
-
 
 def parse_credentials(value: str) -> tuple[str, str]:
     """Split 'client_id:secret' into its two parts."""
@@ -150,7 +147,7 @@ def main() -> None:
     print(f"Client ID:     {client_id}")
     print(
         "Client secret: "
-        f"{mask(client_secret, CLIENT_SECRET_VISIBLE_LENGTH)}"
+        f"{format_value(client_secret, preview=True)}"
     )
     print()
 
